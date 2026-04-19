@@ -22,6 +22,7 @@ Tracking my daily learning to strengthen Java Backend fundamentals. And Covering
 * Memory Model
 * JIT Compiler
 * Class Loading
+* Advance GC 
 
 ### 🔹 Core Java
 
