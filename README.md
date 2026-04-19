@@ -11,7 +11,7 @@ Tracking my daily learning to strengthen Java Backend fundamentals. And Covering
 | Day   | Topic      | Notes Link                          | Key Learning                  |
 | ----- | ---------- | ----------------------------------- | ----------------------------- |
 | Day 1 | JVM Basics | [View](./daily-notes/day-01-jvm.md) | JVM architecture, Method Area |
-| Day 2 | Core Java  | [View](./daily-notes/day-02-core-java.md)| -                        |
+| Day 2 | Core Java  | [View](./daily-notes/day-02-core-java.md)| OOPS, Core Java Concepts, Heap, String Pool                        |
 
 ---
 
@@ -28,7 +28,6 @@ Tracking my daily learning to strengthen Java Backend fundamentals. And Covering
 
 * OOP
 * Collections
-* Multithreading
 
 ---
 
