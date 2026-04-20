@@ -618,3 +618,29 @@ public class SystemCleaner {
 Pre-Java 5: Developers had no way to attach metadata to classes, so they hacked the interface system (e.g., Serializable, Cloneable).
 
 Post-Java 5: We use Annotations (e.g., @Entity, @Override, @Deprecated, @Autowired). You should almost never create a new Marker Interface in a modern Java application.
+
+### Happens-before in Java
+Yeah, you're getting the general idea there — happens-before ensures a specific ordering between operations across threads. But let me push you a bit further: can you give me a concrete example of when happens-before matters? Like, what goes wrong if you don't have those guarantees, and what are some specific happens-before rules in Java that enforce this? So happens-before is about guaranteeing that if thread A does something, thread B will see those changes in the correct order. Without it, one thread might see stale or reordered data from another thread, causing bugs that are nearly impossible to track down. Some key happens-before rules are: a write to a volatile variable happens before any subsequent read of it, actions in a synchronized block happen before the next synchronized block on the same lock, and thread start happens before any action in that thread. Basically, the JVM uses these rules to ensure memory visibility and ordering across threads.
+
+### Method hiding in java
+In Java, if a parent class and child class both have a static method with the same name, what happens when you call it? Is it overriding or something else?
+Close, but not quite! Actually, you can have a static method with the same name in the child class — it's called method hiding, not overriding. The difference is that with static methods, the method called depends on the reference type, not the object type. So if you have a Parent reference pointing to a Child object and call that static method, it'll call the Parent's version. With instance methods, it would call the Child's version due to polymorphism. That's the key distinction. 
+
+### Bridge pattern
+Sure. The bridge pattern is a design pattern that decouples an abstraction from its implementation so they can vary independently. Basically, instead of having a class hierarchy where you mix what something does with how it does it, you separate those concerns into two hierarchies connected by a bridge. A classic example is a Shape abstraction with different implementations for different drawing platforms — you don't want Circle and Square to know about Windows versus Linux rendering. The bridge lets Shape classes work with any rendering implementation. It reduces code duplication and makes it easier to add new implementations.
+
+### Try-with-resources
+Try-with-resources is a feature from Java 7 onwards that automatically closes resources for you. Instead of manually closing things in a finally block, you declare the resource in parentheses after try, and it automatically calls close() when you're done. So try with resources (new FileReader("file.txt")) automatically closes the FileReader without needing finally. It's cleaner, safer, and you don't risk forgetting to close resources. Much better than traditional try-catch-finally. 
+ 
+ ## Here's an expert-level question then: can you explain what the happens-before relationship is in the context of try-with-resources, and how it ensures thread safety when closing resources?
+
+With try-with-resources, there's a happens-before relationship between the resource's close() method and the end of the try block. This means any changes made by the resource are guaranteed to be visible to subsequent code. So if multiple threads are using try-with-resources with the same resource, the JVM ensures proper memory visibility and synchronization when closing. It's about guaranteeing thread-safe cleanup.
+
+### Escape analysis
+Escape analysis is a JVM optimization technique where the compiler analyzes whether an object created in a method stays local to that method or "escapes" to other parts of the code. If an object doesn't escape — meaning it's only used within that method — the JVM can optimize by allocating it on the stack instead of the heap, or even eliminating it entirely through scalar replacement. This avoids garbage collection overhead and improves performance. It's a pretty sophisticated optimization that happens behind the scenes. 
+
+### Weak references
+Weak references are objects that can be garbage collected even if there are references to them. Unlike strong references, if an object only has weak references pointing to it and memory is needed, the garbage collector will reclaim it. You'd use weak references for things like caches — if you cache an object with a weak reference and memory runs low, the cache entry gets garbage collected automatically without causing memory leaks. Another example is WeakHashMap, which uses weak keys, so entries disappear when the key is no longer strongly referenced elsewhere. 
+
+#### Thing to work on
+So the main things to work on are: the four types of references — strong, soft, weak, and phantom references. Exception handling and custom exceptions. Design patterns like singleton, factory, builder, and adapter. Concurrency utilities like AtomicInteger, CountDownLatch, CyclicBarrier, and Semaphore. The Stream API and functional programming with lambdas. And finally, some JDBC and database connection pooling concepts since those often come up in senior roles. Start with references and design patterns, then move into the concurrency utilities. That'll round out your knowledge nicely before the actual interview. You've got a solid foundation — just shore up those gaps and you'll be in great shape, Shubham. Good luck with it!
