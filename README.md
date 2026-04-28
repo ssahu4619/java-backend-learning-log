@@ -15,6 +15,7 @@ Tracking my daily learning to strengthen Java Backend fundamentals. And Covering
 | Day 3 | Multithreading & Concurrency | [View](./daily-notes/day-03-Multithreading-Comcurrency.md)|Thread.join(), Thread Lifecycle, Race Conditions, Atomic Variables, Thread Pools, Concurrency Utilities |
 | Day 4 | Multithreading Advance Lock | [View](./daily-notes/day-04-Multithreading-Advance-lock.md)|Thread.join(), Thread Lifecycle, Race Conditions, Atomic Variables, Thread Pools, Concurrency Utilities |
 | Day 5 | Collection Framework Q&A | [View](./daily-notes/day-05-Collection-Framework-Q&A.md)|Hashmap, Hashtable, LinkedHashMap,TreeMap, ArrayList, LinkedList, HashSet,LinkedHashSet,TreeSet,PriorityQueue,ArrayDeque,BlockingQueue|    
+| Day 6 |SpringBoot | [View](./daily-notes/day-06-SpringBoot.md)|SpringBoot|    
 ---
 
 ## 📂 Topics Covered
@@ -39,6 +40,23 @@ Tracking my daily learning to strengthen Java Backend fundamentals. And Covering
 * Thread Pools
 * Concurrency Utilities
 
+### 🔹 Collections Framework
+* HashMap
+* Hashtable
+* LinkedHashMap
+* TreeMap
+* ArrayList
+* LinkedList
+* HashSet
+* LinkedHashSet
+* TreeSet
+* PriorityQueue
+* ArrayDeque
+* BlockingQueue
+
+
+### 🔹 SpringBoot
+* 
 ---
 
 ## 💡 Approach
