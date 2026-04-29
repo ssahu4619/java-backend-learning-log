@@ -56,7 +56,27 @@ Tracking my daily learning to strengthen Java Backend fundamentals. And Covering
 
 
 ### 🔹 SpringBoot
-* 
+  * DI 
+  * AOP 
+  * Auto-Configuration 
+  * Spring Boot Starters 
+  * Embedded Servers 
+  * Spring Boot CLI 
+  * Spring Boot Actuator 
+  * Spring Boot Web 
+  * Jpa
+  * Hibernate 
+  * Spring Data JPA 
+  * Spring Security 
+  * Spring MVC 
+  * Spring Boot CLI 
+  * Spring Boot Actuator 
+  * Spring Boot Web 
+  * Jpa
+  * Hibernate 
+  * Spring Data JPA 
+  * Spring Security 
+  * Spring MVC 
 ---
 
 ## 💡 Approach
