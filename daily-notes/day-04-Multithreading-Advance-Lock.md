@@ -318,3 +318,188 @@ class Cache {
 | `synchronized` | Simple intrinsic locking for critical sections |
 | `ReentrantLock` | Flexible locking with `tryLock()` and timeout support |
 | `ReadWriteLock` | Optimized for read-heavy workloads |
+
+---
+
+## 7. How `ThreadPoolExecutor` Works Internally
+
+Understanding `ThreadPoolExecutor` at a deep level lets you reason about performance, scaling, and production failures.
+
+### 7.1 What is `ThreadPoolExecutor`?
+
+It is the **actual implementation** behind the common factory methods:
+
+```java
+Executors.newFixedThreadPool(...)
+Executors.newCachedThreadPool(...)
+```
+
+> Those are just convenience factory methods. The real work is done by `ThreadPoolExecutor`.
+
+---
+
+### 7.2 Constructor (The Most Important Piece)
+
+```java
+ThreadPoolExecutor executor = new ThreadPoolExecutor(
+    corePoolSize,
+    maximumPoolSize,
+    keepAliveTime,
+    TimeUnit.SECONDS,
+    new LinkedBlockingQueue<>(),
+    threadFactory,
+    rejectionHandler
+);
+```
+
+---
+
+### 7.3 Key Components
+
+| Parameter | Description |
+|-----------|-------------|
+| `corePoolSize` | Minimum threads kept alive — always active, even when idle. |
+| `maximumPoolSize` | Maximum threads allowed in the pool. |
+| `BlockingQueue` | Holds tasks when all core threads are busy. |
+| `keepAliveTime` | Time after which extra threads (beyond core) are terminated. |
+| `RejectionHandler` | Strategy applied when queue is full **and** threads = `maxPoolSize`. |
+
+#### Rejection Handler Options
+
+| Policy | Behavior |
+|--------|----------|
+| `AbortPolicy` *(default)* | Throws `RejectedExecutionException`. |
+| `CallerRunsPolicy` | The calling thread executes the task itself. |
+| `DiscardPolicy` | Silently discards the task. |
+| `DiscardOldestPolicy` | Drops the oldest queued task and retries. |
+
+---
+
+### 7.4 Internal Working — Step-by-Step Flow
+
+This is the **most important interview concept**.
+
+```
+Task arrives via executor.execute(task)
+         │
+         ▼
+  threads < corePoolSize?
+    YES → Create a new core thread to run the task
+    NO  ▼
+  Queue has space?
+    YES → Add task to the blocking queue
+    NO  ▼
+  threads < maximumPoolSize?
+    YES → Create a new non-core thread to run the task
+    NO  ▼
+  Apply Rejection Handler
+```
+
+> **Key Insight:** Extra threads (beyond core) are only ever created when the **queue is full**.
+
+---
+
+### 7.5 Critical Behavioral Edge Cases
+
+#### ❌ Case 1: Unbounded Queue (Common Mistake)
+
+```java
+new LinkedBlockingQueue<>(); // No capacity limit!
+```
+
+- Step 2 (queue push) **always succeeds** → `maximumPoolSize` is **never reached**.
+- Result: No scaling beyond core threads, and a potential **memory overflow** (OOM).
+
+#### ⚡ Case 2: `SynchronousQueue` (No Buffering)
+
+```java
+new SynchronousQueue<>();
+```
+
+- Holds **zero tasks** — a task must be handed directly to a waiting thread.
+- Every new task immediately tries to create a new thread (up to `maxPoolSize`).
+- Used internally by `Executors.newCachedThreadPool()`.
+
+#### 🔒 Case 3: `FixedThreadPool` Reality
+
+```java
+Executors.newFixedThreadPool(5);
+```
+
+Internally translates to:
+
+```java
+new ThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+```
+
+- Exactly **5 threads**, always.
+- All additional tasks are queued indefinitely (unbounded queue).
+
+---
+
+### 7.6 Worker Thread Internal Loop
+
+Each worker thread runs a loop similar to:
+
+```java
+while (task != null || (task = queue.take()) != null) {
+    task.run();
+}
+```
+
+**Thread lifecycle:** Take task → Execute → Take next task → Repeat → Die after `keepAliveTime` if idle.
+
+---
+
+### 7.7 Real Production Problems
+
+| Problem | Cause | Effect |
+|---------|-------|--------|
+| **Thread Starvation** | Small pool + long-running tasks | Large backlog, slow system |
+| **Memory Leak / OOM** | Unbounded queue + fast producers | Tasks pile up faster than consumed |
+| **Context Switching Explosion** | `maxPoolSize` set too high | CPU thrashing, degraded throughput |
+
+---
+
+### 7.8 `execute()` vs `submit()`
+
+| Feature | `execute()` | `submit()` |
+|---------|-------------|------------|
+| Return value | `void` | Returns a `Future<?>` |
+| Exception handling | Exceptions propagate to `UncaughtExceptionHandler` | Exceptions are captured inside the `Future` |
+| Use case | Fire-and-forget tasks | Tasks where you need the result or error |
+
+---
+
+### 7.9 Real-World Mapping (Spring Boot)
+
+In a typical Spring Boot application:
+
+- **Tomcat** uses an internal thread pool to handle HTTP requests.
+- **`@Async`** methods run on a configurable `TaskExecutor` thread pool.
+- **Database connection pools** (HikariCP) follow similar queuing and bounding logic.
+
+**Example — API Server Under Load:**
+
+```
+1000 incoming requests
+    → Thread pool size = 50
+    → 50 threads actively handle requests
+    → 950 requests queued
+    → Controlled concurrency = stable, predictable system
+```
+
+---
+
+### 7.10 Optimal Thread Pool Sizing
+
+| Workload Type | Recommended Pool Size |
+|---------------|-----------------------|
+| **CPU-bound** (heavy computation) | ≈ Number of CPU cores |
+| **I/O-bound** (DB, network, file) | > Number of CPU cores (threads wait on I/O) |
+
+---
+
+### 7.11 Interview Answer
+
+> *"ThreadPoolExecutor manages task execution using a combination of core threads, a blocking queue, and a maximum thread limit. When a task arrives, it first tries to use an existing core thread, then queues the task if all core threads are busy, and only creates additional threads if the queue is full. If the thread count hits the maximum and the queue is also full, a rejection handler is triggered. This design controls concurrency, reduces context-switching overhead, and efficiently utilizes system resources."*
