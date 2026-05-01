@@ -1,8 +1,8 @@
 // Source code is decompiled from a .class file using FernFlower decompiler (from Intellij IDEA).
-class Inventory {
+class Inventory1 {
    private int items = 0;
 
-   Inventory() {
+   Inventory1() {
    }
 
    public synchronized void addItems() {
