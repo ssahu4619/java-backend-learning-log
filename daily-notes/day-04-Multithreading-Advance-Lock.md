@@ -1,5 +1,7 @@
 # Java Multithreading Masterclass: Fundamentals to Advanced Locks
 
+### [Gpt Link] ( https://chatgpt.com/c/69e4ce12-ccc4-83ab-adc1-388423a98828)
+
 This document is a comprehensive compilation of notes and code examples covering Java multithreading, from thread creation to advanced concurrency locks.
 
 ---
