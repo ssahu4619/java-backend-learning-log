@@ -393,4 +393,192 @@ public class UserController {
 * The **Controller Layer** handles HTTP requests and returns responses to the client.
 
 **This layered architecture promotes code organization, maintainability, and testability.**    
+
+## 📚 Core Concept: Spring Boot Components
+
+### What is a Spring Boot AutoConfiguration?
+
+**Answer:**
+Spring Boot AutoConfiguration is a powerful feature that automatically configures your Spring application based on the dependencies you have added. It eliminates the need for manual configuration of many common components, such as data sources, web servers, and security settings.
+
+### How does AutoConfiguration work?
+
+**Answer:**
+AutoConfiguration works by using a set of `@Configuration` classes that are automatically imported based on the presence of certain classes in your classpath. These configuration classes use conditional annotations like `@ConditionalOnClass`, `@ConditionalOnBean`, and `@ConditionalOnProperty` to determine whether to apply their configuration.
+
+### Example:
+```java
+@Configuration
+@ConditionalOnClass(DataSource.class)
+@ConditionalOnProperty(prefix = "spring.datasource", name = "url")
+public class DataSourceAutoConfiguration {
     
+    @Bean
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSource dataSource() {
+        return new HikariDataSource();
+    }
+}
+```    
+### What is Spring Boot Starter?
+
+**Answer:**
+Spring Boot Starters are convenient dependency descriptors that bundle together common dependencies required for a specific type of application. They simplify the process of adding dependencies to your project by providing a single dependency that includes all the necessary libraries.
+
+### Common Starter Examples:
+
+* `spring-boot-starter-web` - For web applications
+* `spring-boot-starter-data-jpa` - For JPA-based data access
+* `spring-boot-starter-security` - For security features
+* `spring-boot-starter-test` - For testing
+* `spring-boot-starter-actuator` - For monitoring and management
+
+## Spring Boot Project Structure
+### What is the standard Spring Boot project structure?
+
+**Answer:**
+The standard Spring Boot project structure follows a convention-over-configuration approach, organizing code into logical layers:
+
+```
+sample-project/
+├── src/main/java/
+│   ├── com/example/demo/
+│   │   ├── DemoApplication.java  # Main application class
+│   │   ├── config/               # Configuration classes
+│   │   ├── controller/           # REST controllers
+│   │   ├── service/              # Business logic
+│   │   ├── repository/           # Data access layer
+│   │   ├── model/                # Entity classes
+│   │   ├── exception/            # Exception handling
+│   │   └── util/                 # Utility classes
+│   └── resources/
+│       ├── application.properties  # Configuration file
+│       ├── application.yml       # Alternative configuration (optional)
+│       └── static/               # Static web content
+│       └── templates/            # Template files (if using Thymeleaf/JSP)
+├── src/test/java/
+│   └── com/example/demo/         # Test classes
+├── pom.xml                       # Maven configuration
+└── build.gradle                  # Gradle configuration (optional)
+```    
+### Where do you place the main application class?
+
+**Answer:**
+The main application class is typically placed in the root of the `src/main/java` directory, with a package structure that reflects your application's domain.
+
+### How do you structure different layers in a Spring Boot application?
+
+**Answer:**
+Spring Boot applications typically follow a layered architecture:
+
+| Layer | Purpose | Typical Location |
+|-------|---------|------------------|
+| Controller Layer | Handles HTTP requests and responses | `controller/` |
+| Service Layer | Contains business logic | `service/` |
+| Repository Layer | Handles data access | `repository/` |
+| Model/Entity Layer | Represents data models | `model/` |
+| Configuration Layer | Manages application configuration | `config/` |
+| Exception Layer | Handles exceptions | `exception/` |
+| Utility Layer | Helper classes and utilities | `util/` |
+
+---
+
+### What is the important role of the IoC Container in Spring?
+
+**Answer**:
+
+The **IoC (Inversion of Control) Container** is the core of the Spring Framework. It is responsible for managing the lifecycle of beans, from instantiation to destruction.
+
+### 🌟 Key Roles of the IoC Container:
+
+* **1. Object Creation & Management**:
+    * It creates objects (beans) and manages their entire lifecycle. You don't need to use the `new` keyword manually for every service or repository.
+* **2. Dependency Injection (DI)**:
+    * This is the most critical role. It "injects" the required dependencies into a class at runtime. This promotes **loose coupling** and makes the code more testable.
+* **3. Configuration Management**:
+    * It reads configuration metadata (via XML, Java Annotations, or Java Code) and assembles the application components accordingly.
+* **4. Centralized Control**:
+    * It provides a single place to manage application components, making it easier to swap implementations (e.g., switching from a Mock Repository to a Real Repository for testing).
+
+---
+
+###  What is BeanFactory and ApplicationContext?
+
+**Answer**:
+
+Both **BeanFactory** and **ApplicationContext** are interfaces that represent the Spring IoC container. However, they differ in complexity and features.
+
+###  BeanFactory:
+* It is the **root interface** for accessing the Spring bean container.
+* It provides basic support for **Dependency Injection**.
+* It uses **Lazy Loading**, meaning it only creates a bean when the `getBean()` method is explicitly called.
+
+### ApplicationContext:
+* It is a **sub-interface** of BeanFactory and provides more advanced features.
+* It is the most commonly used container in modern Spring applications.
+* It uses **Eager Loading**, meaning it creates all singleton beans at the time of application startup.
+* It includes features like AOP (Aspect Oriented Programming), Internationalization (i18n), and Event Handling.
+
+---
+
+### Comparison: BeanFactory vs. ApplicationContext
+
+**Answer**:
+
+| Feature | BeanFactory | ApplicationContext |
+| :--- | :--- | :--- |
+| **Loading Strategy** | **Lazy Loading** (Creates beans on demand) | **Eager Loading** (Creates beans at startup) |
+| **Type** | Basic IoC Container | Advanced IoC Container |
+| **AOP Support** | No | **Yes** |
+| **Internationalization (i18n)** | No | **Yes** (via MessageSource) |
+| **Event Publication** | No | **Yes** (ApplicationEvent) |
+| **Annotation Support** | Manual registration needed | **Full Support** (@Autowired, @Component, etc.) |
+| **Usage** | Suitable for lightweight/mobile apps | Recommended for enterprise applications |
+
+---
+
+### How to create an Application Context in Spring?
+
+**Answer**:
+
+In modern Spring and Spring Boot applications, there are several ways to initialize the Application Context depending on the configuration style:
+
+### 1. Using Annotation-based Configuration (Modern Approach)
+The `AnnotationConfigApplicationContext` is used when you use Java classes with `@Configuration`.
+
+```java
+// Define Configuration Class
+@Configuration
+@ComponentScan("com.example")
+public class AppConfig { }
+
+// Create Context
+ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+// Get Bean
+MyService service = context.getBean(MyService.class);
+```
+
+### 2. Using XML-based Configuration (Traditional Approach)
+The `ClassPathXmlApplicationContext` is used when your beans are defined in an XML file.
+
+```java
+ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+```
+
+### 3. In Spring Boot Applications
+In Spring Boot, the context is automatically created by `SpringApplication.run()`.
+
+```java
+@SpringBootApplication
+public class MyBootApp {
+    public static void main(String[] args) {
+        // This returns the ApplicationContext
+        ApplicationContext context = SpringApplication.run(MyBootApp.class, args);
+    }
+}
+```
+
+### 4. For Web Applications
+`AnnotationConfigServletWebServerApplicationContext` is the specific implementation used by Spring Boot for web-based apps to manage the embedded servlet container.
+
