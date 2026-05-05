@@ -582,3 +582,72 @@ public class MyBootApp {
 ### 4. For Web Applications
 `AnnotationConfigServletWebServerApplicationContext` is the specific implementation used by Spring Boot for web-based apps to manage the embedded servlet container.
 
+---
+
+### What is Component Scan?
+
+**Answer**:
+**Component Scan** is a core feature in Spring that automatically detects and registers Spring beans within specified packages. Instead of manually declaring each bean in configuration files, Spring scans the classpath for classes annotated with stereotype annotations (like `@Component`, `@Service`, `@Repository`, and `@Controller`) and registers them in the Spring IoC container.
+
+---
+
+### How does Spring know where to search for Components and Beans?
+
+**Answer**:
+Spring knows where to search for components based on the **base packages** provided to the Component Scan mechanism. It will recursively scan the specified base package and all of its sub-packages for annotated classes. If no explicit base package is defined (especially in Spring Boot), it defaults to scanning the package where the main configuration class is located and its sub-packages.
+
+---
+
+### How do you define Component Scan in Java configuration and XML?
+
+**Answer**:
+
+**1. Java Configuration:**
+In modern Java-based configuration, you use the `@ComponentScan` annotation on a class annotated with `@Configuration`. You can specify the packages to scan using the `basePackages` attribute.
+
+```java
+@Configuration
+@ComponentScan(basePackages = "com.example.myapp")
+public class AppConfig {
+    // Other bean definitions
+}
+```
+
+**2. XML Configuration:**
+In traditional XML-based Spring configuration, you use the `<context:component-scan>` element and provide the base package.
+
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="...">
+       
+    <!-- Enables component scanning -->
+    <context:component-scan base-package="com.example.myapp" />
+    
+</beans>
+```
+
+---
+
+### How is Component Scan done in Spring Boot?
+
+**Answer**:
+In Spring Boot, component scanning is typically handled automatically without any explicit configuration. This is achieved through the `@SpringBootApplication` annotation placed on the main application class.
+
+The `@SpringBootApplication` annotation is a convenience annotation that implicitly includes three annotations, one of which is `@ComponentScan`. 
+
+By default, it tells Spring Boot to scan **the package where the main application class is located** and all of its **sub-packages**.
+
+```java
+package com.example.myapp;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication // Implicitly includes @ComponentScan for "com.example.myapp" and sub-packages
+public class MySpringBootApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(MySpringBootApplication.class, args);
+    }
+}
+```
