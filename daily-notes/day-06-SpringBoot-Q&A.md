@@ -651,3 +651,54 @@ public class MySpringBootApplication {
     }
 }
 ```
+
+---
+
+### What does `@Component` signify?
+
+**Answer**:
+The `@Component` annotation is a generic stereotype annotation that marks a Java class as a Spring-managed bean. 
+
+When Spring's Component Scan mechanism runs, it looks for classes annotated with `@Component` (or its specializations) and automatically instantiates them, managing their lifecycle within the Spring IoC (Inversion of Control) container. This eliminates the need to manually declare beans in an XML or Java configuration file.
+
+---
+
+### What does `@Autowired` signify?
+
+**Answer**:
+The `@Autowired` annotation is used for **Dependency Injection** in Spring. 
+
+When you annotate a field, constructor, or setter method with `@Autowired`, you are telling Spring to automatically resolve and inject the required dependency (bean) from the IoC container into that specific place. 
+
+By default, `@Autowired` resolves dependencies **by type** (i.e., it looks for a bean of the exact same class or interface). If multiple beans of the same type exist, it can be combined with `@Qualifier` to resolve conflicts.
+
+**Example (Constructor Injection - Recommended):**
+```java
+@Service
+public class UserService {
+    private final UserRepository userRepository;
+
+    @Autowired // Spring automatically injects the UserRepository bean here
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+}
+```
+
+---
+
+### What is the difference between `@Component`, `@Repository`, `@Service`, and `@Controller` annotations?
+
+**Answer**:
+In Spring, `@Component` is the base, generic stereotype annotation. The other three (`@Repository`, `@Service`, and `@Controller`) are **specializations** of `@Component` designed for specific layers of an application. 
+
+While they all make a class a Spring bean, they serve different semantic purposes and sometimes provide additional functional benefits:
+
+| Annotation | Application Layer | Purpose & Special Features |
+| :--- | :--- | :--- |
+| **`@Component`** | Any | The generic base annotation. Used for any component that doesn't fit neatly into the Service, Repository, or Controller layer (e.g., utility classes, schedulers). |
+| **`@Service`** | Service Layer | Used to mark classes that hold the core **business logic**. Currently, it doesn't provide any special behavior over `@Component`, but it significantly improves code readability and intent. |
+| **`@Repository`** | Data Access Layer (DAO) | Used to mark classes that interact directly with the database. **Key Feature:** It automatically catches database-specific exceptions (like `SQLException`) and translates them into Spring's unified, unchecked `DataAccessException` hierarchy. |
+| **`@Controller` / `@RestController`** | Presentation Layer | Used to mark classes that handle incoming HTTP requests in Spring MVC/WebFlux. Classes with this annotation are picked up by the `DispatcherServlet` to map web requests to handler methods. |
+
+**In Summary**: Always use the most specific annotation for the layer your class belongs to. It makes the architecture clear and allows Spring to apply layer-specific behaviors (like exception translation for `@Repository`).
