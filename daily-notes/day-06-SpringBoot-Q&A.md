@@ -702,3 +702,4 @@ While they all make a class a Spring bean, they serve different semantic purpose
 | **`@Controller` / `@RestController`** | Presentation Layer | Used to mark classes that handle incoming HTTP requests in Spring MVC/WebFlux. Classes with this annotation are picked up by the `DispatcherServlet` to map web requests to handler methods. |
 
 **In Summary**: Always use the most specific annotation for the layer your class belongs to. It makes the architecture clear and allows Spring to apply layer-specific behaviors (like exception translation for `@Repository`).
+ 
