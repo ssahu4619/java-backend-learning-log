@@ -21,11 +21,11 @@ docker start <container_name> or <container_id> - It is used to start a containe
 docker stop <container_name> or <container_id> - It is used to stop a container    
 docker rm <container_name> or <container_id> - It is used to remove a container    
 docker rmi <image_name> or <image_id> - It is used to remove an image    
+docker ps - It is used to list all the running containers    
+docker ps -a - It is used to list all the containers   
 
 docker build -t <image_name> <path_to_dockerfile> - It is used to build an image from a Dockerfile    
-docker run -d -p <host_port>:<container_port> <image_name> - It is used to run a container from an image    
-docker ps - It is used to list all the running containers    
-docker ps -a - It is used to list all the containers    
+docker run -d -p <host_port>:<container_port> <image_name> - It is used to run a container from an image 
 docker exec -it <container_name> <command> - It is used to run a command in a container    
 docker logs <container_name> or <container_id> - It is used to view the logs of a container    
 docker stats - It is used to view the stats of a container    
