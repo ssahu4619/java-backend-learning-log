@@ -1,6 +1,5 @@
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class javaStream {
 
@@ -97,6 +96,10 @@ public class javaStream {
 //        13.Join a list of strings with a separator.
         String collect3 = grpNames.stream().collect(Collectors.joining(",","{","}"));
         System.out.println("joining  name- "+collect3);
+
+        //        14
+        List<String> dNames = Arrays.asList("Amit", "Rahul", "Anita", "Priya", "Arjun");
+        dNames.stream().map(String::toUpperCase).forEach(System.out::print);
     }
 }
 
