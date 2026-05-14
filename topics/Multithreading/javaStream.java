@@ -1,8 +1,42 @@
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class javaStream {
 
+ class Employee{
+     private String name;
+     private int salary;
+
+     public Employee(String name, int salary) {
+         this.name = name;
+         this.salary = salary;
+     }
+
+     public int getSalary() {
+         return salary;
+     }
+
+     public void setSalary(int salary) {
+         this.salary = salary;
+     }
+
+     public String getName() {
+         return name;
+     }
+
+     public void setName(String name) {
+         this.name = name;
+     }
+
+     @Override
+     public String toString() {
+         return "Employee{" +
+                 "name='" + name + '\'' +
+                 ", salary=" + salary +
+                 '}';
+     }
+ }
     void main() {
 //       1. Find all even numbers from a list.
         List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
@@ -87,7 +121,7 @@ public class javaStream {
         Map<Integer, List<String>> collect = grpNames.stream().collect(Collectors.groupingBy(String::length));
         System.out.println("--------"+collect.toString());
 
-//        12. Find the second highest number in a list.
+//        12. Find the second-highest number in a list.
         System.out.println("Second highest number-- ");
         eNumber.stream()
                 .sorted(Comparator.reverseOrder())
@@ -96,10 +130,32 @@ public class javaStream {
 //        13.Join a list of strings with a separator.
         String collect3 = grpNames.stream().collect(Collectors.joining(",","{","}"));
         System.out.println("joining  name- "+collect3);
+//        14.Find the average of a list of integers.
+      double collect1 = dubNumber.stream()
+              .collect(Collectors.averagingInt
+                      (Integer::intValue));
+        double average = dubNumber.stream()
+                .mapToInt(Integer::intValue)
+                .average()
+                .orElse(0);
+        System.out.println("\n Number List-- " + dubNumber.toString());
+        System.out.println("Average of number- "+ collect1);
 
-        //        14
-        List<String> dNames = Arrays.asList("Amit", "Rahul", "Anita", "Priya", "Arjun");
-        dNames.stream().map(String::toUpperCase).forEach(System.out::print);
+//        15. Filter employees with salary greater than 50000.
+        List<Employee> employees = Arrays.asList(
+                new Employee("Rahul", 60000),
+                new Employee("Amit", 45000),
+                new Employee("Priya", 75000)
+        );
+//        employees.stream().collect(Collectors.groupingBy(Employee::getSalary,));
+        List<Employee> listOfEmployee = employees.stream().filter(e -> e.getSalary() > 50000).toList();
+        System.out.println("Employee List- "+ employees.toString());
+        System.out.println("Empl with higher than 50000" +listOfEmployee.toString());
+
+//        16.Count occurrences of each character in a string
+         String str = "programming";
+         IntStream array = str.chars();
+         array.mapToObj(c->(char)c).collect(Collectors.groupingBy(c->c, Collectors.counting()));
     }
 }
 
