@@ -7,6 +7,13 @@ public class javaStream {
  class Employee{
      private String name;
      private int salary;
+     String department;
+
+     public Employee(String name, String department , int salary) {
+         this.name = name;
+         this.salary = salary;
+         this.department = department;
+     }
 
      public Employee(String name, int salary) {
          this.name = name;
@@ -29,11 +36,20 @@ public class javaStream {
          this.name = name;
      }
 
+     public String getDepartment() {
+         return department;
+     }
+
+     public void setDepartment(String department) {
+         this.department = department;
+     }
+
      @Override
      public String toString() {
          return "Employee{" +
                  "name='" + name + '\'' +
                  ", salary=" + salary +
+                 ", department='" + department + '\'' +
                  '}';
      }
  }
@@ -149,13 +165,75 @@ public class javaStream {
         );
 //        employees.stream().collect(Collectors.groupingBy(Employee::getSalary,));
         List<Employee> listOfEmployee = employees.stream().filter(e -> e.getSalary() > 50000).toList();
-        System.out.println("Employee List- "+ employees.toString());
+        System.out.println("\nEmployee List- "+ employees.toString());
         System.out.println("Empl with higher than 50000" +listOfEmployee.toString());
 
 //        16.Count occurrences of each character in a string
          String str = "programming";
          IntStream array = str.chars();
          array.mapToObj(c->(char)c).collect(Collectors.groupingBy(c->c, Collectors.counting()));
+
+        Map<Character, Long> charCount =
+        str.chars()
+                .mapToObj(c -> (char) c)
+                .collect(Collectors.groupingBy(c -> c, Collectors.counting()));
+
+                System.out.println("\nCharacter count: " + charCount);
+
+        // 17.Find the total length of all strings starting with 'A'
+        int totalLength = aNames.stream()
+                .filter(s -> s.startsWith("A"))
+                .mapToInt(String::length)
+                .sum();
+
+                System.out.println("Total length of strings starting with 'A': " + totalLength);
+
+                // 18. Group employees by department
+
+        List<Employee> empList = Arrays.asList(
+                new Employee("Rahul", "HR", 50000),
+                new Employee("Amit", "IT", 60000),
+                new Employee("Priya", "HR", 55000),
+                new Employee("Vikram", "IT", 62000)
+        );
+
+        Map<String, List<Employee>> byDept = empList.stream()
+                .collect(Collectors.groupingBy(Employee::getDepartment));
+
+        System.out.println("\nGrouped by department: " + byDept);
+
+
+
+        /*
+         Mid-level Questions for Stream
+        */
+
+
+
+//        1. Find the top 3 highest paid employees.\
+        empList.stream().forEach(s-> System.out.print("\nsalary -"+s.getSalary()));
+        System.out.println();
+        empList.stream()
+                .sorted(Comparator.comparing(Employee::getSalary).reversed())
+                .limit(3)
+                .map(e -> e.getName() + ": " + e.getSalary())
+                .forEach(System.out::println);
+        System.out.println("-------------------------");
+        empList.stream()
+                .sorted(Comparator.comparing(Employee::getSalary).reversed())
+                .limit(3)
+                .forEach(System.out::println);
+
+//        2.Partition a list into even and odd numbers.
+        List<Integer> Pnumbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
+        System.out.println("\nNumber to be partition by even and old - "+ Pnumbers.toString());
+        Map<Boolean, List<Integer>> collect2 = Pnumbers.stream()
+                .collect(Collectors.partitioningBy(s -> s % 2 == 0));
+        collect2.entrySet().iterator();
+        collect2.forEach((isEven, list) -> {
+    System.out.println((isEven ? "Even Numbers: " : "Odd Numbers: ") + list);
+});
+
     }
 }
 
