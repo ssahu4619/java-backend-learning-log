@@ -110,3 +110,15 @@ System.out.println(random.get()); // 0.732...
 ### Q6. What's the difference between Function<T,R> and UnaryOperator<T>?
 
 `UnaryOperator<T>` extends `Function<T,T>` — input and output are the same type.
+
+Quick Recap — Key Methods Used 🎯
+
+| Method | Purpose |
+|---|---|
+| `partitioningBy()` | split into true/false groups |
+| `groupingBy()` | group by a classifier |
+| `mapping()` | transform inside a group |
+| `toMap()` | convert to Map |
+| `summaryStatistics()` | all stats in one call |
+| `thenComparing()` | chain sort conditions |
+| `Predicate.and/or/negate` | chain conditions |

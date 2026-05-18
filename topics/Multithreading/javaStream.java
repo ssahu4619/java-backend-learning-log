@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -234,6 +236,156 @@ public class javaStream {
     System.out.println((isEven ? "Even Numbers: " : "Odd Numbers: ") + list);
 });
 
+//        3. Find duplicate elements in a list.
+
+        List<Integer> duplicatesMapWay = dubNumber.stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet().stream()
+                .filter(entry -> entry.getValue() > 1)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        Set<Integer> set = new HashSet<>();
+
+        List<Integer> duplicates = numbers.stream()
+                .filter(n -> !set.add(n)) // add() returns false if already exists
+                .collect(Collectors.toList());
+
+//    4.Sort employees by salary, then by name alphabetically.
+        List<Employee> collect5 = empList.stream()
+                .sorted(Comparator.comparingInt(Employee::getSalary)
+                        .thenComparing(Employee::getName))
+                .collect(Collectors.toList());
+        System.out.println("\nsorted name- "+ collect5);
+
+//        5.Get names of employees grouped by department.
+        Map<String, List<String>> employeeByDepartment = empList.stream()
+                .collect(Collectors
+                        .groupingBy(Employee::getDepartment,
+                                Collectors.mapping(Employee::getName,Collectors.toList())));
+
+        System.out.println("\n"+employeeByDepartment.toString());
+
+//        6.Find the longest string in a list.
+        List<String> words = Arrays.asList("Java", "Stream", "Lambda", "API");
+
+        String longestString = words.stream()
+                .collect(Collectors.groupingBy(String::length)).toString();
+
+        System.out.println("\n Longest String"+ longestString);
+
+        Optional<Map.Entry<Integer, List<String>>> max1 = words.stream()
+                .collect(Collectors.groupingBy(String::length))
+                .entrySet()
+                .stream()
+                .max(Map.Entry.comparingByKey());
+
+        System.out.println("\n longest String - "+max1.get());
+
+        Optional<String> longest = words.stream()
+                .max(Comparator.comparingInt(String::length));
+
+        longest.ifPresent(System.out::println);
+
+//        7. Reverse each word in a list of strings.
+        List<String> list = words.stream()
+                .map(s -> new StringBuilder(s)
+                        .reverse().toString())
+                .toList();
+        System.out.println("\nList to be reverse - "+ words.toString());
+        System.out.println(list);
+
+//        9.Find department with the highest average salary.
+        Map<String, Double> avgSalaryByDept = empList.stream()
+                .collect(Collectors.
+                        groupingBy(Employee::getDepartment,
+                                Collectors.averagingInt(Employee::getSalary)));
+
+        System.out.println("\n"+avgSalaryByDept);
+
+        Optional<Map.Entry<String, Double>> highestDept = avgSalaryByDept
+                .entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue());
+
+        highestDept.ifPresent(e ->
+                System.out.println(e.getKey() + " = " + e.getValue()));
+
+        List<Employee> Employees = Arrays.asList(
+                new Employee( "Rahul", 60000),
+                new Employee( "Priya", 75000),
+                new Employee( "Priya", 7000)
+        );
+
+       Map<String, Integer> empMap = Employees.stream()
+               .collect(Collectors.toMap(
+                       Employee::getName,    // key
+                       Employee::getSalary,  // value
+                       (existing, newVal) -> existing // keep existing on duplicate
+               ));
+        Map<String, Integer> empMap2 = Employees.stream()
+                .collect(Collectors.toMap(
+                        Employee::getName,
+                        Employee::getSalary,
+                        (existing, newVal) -> existing // keep existing on duplicate
+                ));
+
+        System.out.println("\nEmployee Map:" + empMap);
+        empMap.forEach((name, salary) -> {
+            System.out.println("Name: " + name + ", Salary: " + salary);
+        });
+
+//       11. Check if all, any, or no elements match a condition.
+        boolean allEven = numbers.stream()
+                .allMatch(n -> n % 2 == 0);   // true — all are even
+
+        boolean anyGreaterThan8 = numbers.stream()
+                .anyMatch(n -> n > 8);         // true — 10 exists
+
+        boolean noneNegative = numbers.stream()
+                .noneMatch(n -> n < 0);
+
+        String sentence = "java is great and java is fun";
+
+        Map<String, Long> frequency = Arrays.stream(sentence.split(" "))
+                .collect(Collectors.groupingBy(
+                        w -> w,
+                        Collectors.counting()
+                ));
+
+        List<Employee> skillEmployees = Arrays.asList(
+                new Employee("Rahul", Arrays.asList("Java", "Spring", "SQL")),
+                new Employee("Priya", Arrays.asList("Java", "Python", "AWS")),
+                new Employee("Amit", Arrays.asList("Spring", "Docker", "AWS"))
+        );
+
+        List<String> uniqueSkills = employees.stream()
+                .flatMap(e -> e.getSkills().stream())
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+
+// Output: [AWS, Docker, Java, Python, Spring, SQL]
+
+        List<String> words = Arrays.asList("Banana", "Apple", "Kiwi", "Fig", "Mango");
+
+        List<String> sorted = words.stream()
+                .sorted(Comparator.comparingInt(String::length)
+                        .thenComparing(Comparator.naturalOrder()))
+                .collect(Collectors.toList());
+
+// Output: [Fig, Kiwi, Apple, Mango, Banana]
+
+        List<Integer> prNumbers = Arrays.asList(1, 5, 10, 15, 20, 25, 30);
+
+        Predicate<Integer> greaterThan10 = n -> n > 10;
+        Predicate<Integer> lessThan25    = n -> n < 25;
+
+        List<Integer> result = prNumbers.stream()
+                .filter(greaterThan10.and(lessThan25)) // chained predicates
+                .collect(Collectors.toList());
+
+// Output: [15, 20]
     }
 }
 
