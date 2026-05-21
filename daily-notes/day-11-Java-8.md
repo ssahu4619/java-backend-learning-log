@@ -122,3 +122,74 @@ Quick Recap — Key Methods Used 🎯
 | `summaryStatistics()` | all stats in one call |
 | `thenComparing()` | chain sort conditions |
 | `Predicate.and/or/negate` | chain conditions |
+
+## 3️⃣ Stream API
+
+### 1. What is Stream API?
+
+A **Stream** is a sequence of elements supporting sequential and parallel aggregate operations. It represents a pipeline of operations through which data flows. A stream pipeline consists of:
+
+1. **Source**: A collection, array, generator function, or I/O channel that provides the data.
+2. **Intermediate Operations**: Operations (like `filter()`, `map()`, `sorted()`) that transform the stream into another stream. These are lazy and do not execute until a terminal operation is called.
+3. **Terminal Operations**: An operation (like `collect()`, `forEach()`, `reduce()`) that produces a non-stream result (a collection, primitive value, or side-effect) and closes the stream.
+
+#### Key Characteristics of Streams:
+* **No Storage:** Streams do not store data elements. They carry values from a source through a pipeline of computational operations.
+* **Non-destructive:** Stream operations do not modify the underlying source (e.g., filtering a collection returns a new stream, leaving the original collection unchanged).
+* **Lazy Evaluation:** Intermediate operations are not performed until the terminal operation is initiated.
+* **Single-use:** A stream can only be traversed once. Attempting to reuse a closed stream throws an `IllegalStateException`.
+
+---
+
+### 2. How to get a Stream?
+
+There are several ways to create and obtain a `Stream` in Java:
+
+#### A. From a Collection
+The most common way is using the `stream()` or `parallelStream()` method on any `java.util.Collection`:
+```java
+List<String> list = Arrays.asList("Java", "Spring", "Docker");
+Stream<String> streamFromList = list.stream();
+```
+
+#### B. From an Array
+Using the static helper method `Arrays.stream()`:
+```java
+String[] array = {"Java", "Spring", "Docker"};
+Stream<String> streamFromArray = Arrays.stream(array);
+```
+
+#### C. Using `Stream.of()`
+For ad-hoc values or arrays:
+```java
+Stream<Integer> streamOfValues = Stream.of(10, 20, 30, 40);
+```
+
+#### D. Using Infinite/Generated Streams
+Useful for creating stream sequences programmatically:
+* **`Stream.iterate()`**: Generates an ordered sequential stream by applying a function iteratively.
+  ```java
+  // Generates 0, 2, 4, 6, 8, ...
+  Stream<Integer> evenNumbers = Stream.iterate(0, n -> n + 2).limit(10);
+  ```
+* **`Stream.generate()`**: Generates an unordered sequential stream using a `Supplier`.
+  ```java
+  // Generates a stream of random doubles
+  Stream<Double> randomNumbers = Stream.generate(Math::random).limit(5);
+  ```
+
+#### E. From File I/O
+Using java.nio.file.Files to stream lines of a file:
+```java
+try (Stream<String> lines = Files.lines(Paths.get("data.txt"))) {
+    lines.forEach(System.out::println);
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+#### F. Using `Stream.empty()`
+Creates an empty stream (often used to avoid returning null):
+```java
+Stream<String> emptyStream = Stream.empty();
+```
