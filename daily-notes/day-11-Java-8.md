@@ -193,4 +193,15 @@ Creates an empty stream (often used to avoid returning null):
 ```java
 Stream<String> emptyStream = Stream.empty();
 ```
-# Update 1: 2026-05-20 18:30
+ # Update 1: 2026-05-20 18:30   
+  
+FlatMap in streams
+
+List<List<Integer>> nested = Arrays.asList(
+                Arrays.asList(1, 2, 3),
+                Arrays.asList(4, 5),
+                Arrays.asList(6, 7, 8)
+        );
+        List<Integer> flatList = nested.stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
