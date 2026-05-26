@@ -353,23 +353,23 @@ public class javaStream {
                         Collectors.counting()
                 ));
 
-        List<Employee> skillEmployees = Arrays.asList(
-                new Employee("Rahul", Arrays.asList("Java", "Spring", "SQL")),
-                new Employee("Priya", Arrays.asList("Java", "Python", "AWS")),
-                new Employee("Amit", Arrays.asList("Spring", "Docker", "AWS"))
-        );
+//        List<Employee> skillEmployees = Arrays.asList(
+//                new Employee("Rahul", Arrays.asList("Java", "Spring", "SQL")),
+//                new Employee("Priya", Arrays.asList("Java", "Python", "AWS")),
+//                new Employee("Amit", Arrays.asList("Spring", "Docker", "AWS"))
+//        );
 
-        List<String> uniqueSkills = employees.stream()
-                .flatMap(e -> e.getSkills().stream())
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
+//        List<String> uniqueSkills = employees.stream()
+//                .flatMap(e -> e.getSkills().stream())
+//                .distinct()
+//                .sorted()
+//                .collect(Collectors.toList());
 
 // Output: [AWS, Docker, Java, Python, Spring, SQL]
 
-        List<String> words = Arrays.asList("Banana", "Apple", "Kiwi", "Fig", "Mango");
+        List<String> words1 = Arrays.asList("Banana", "Apple", "Kiwi", "Fig", "Mango");
 
-        List<String> sorted = words.stream()
+        List<String> sorted = words1.stream()
                 .sorted(Comparator.comparingInt(String::length)
                         .thenComparing(Comparator.naturalOrder()))
                 .collect(Collectors.toList());
@@ -386,6 +386,9 @@ public class javaStream {
                 .collect(Collectors.toList());
 
 // Output: [15, 20]
+
+        Employees.stream()
+                .sorted(Comparator.comparing(Employee::getSalary)).toList();
     }
 }
 
