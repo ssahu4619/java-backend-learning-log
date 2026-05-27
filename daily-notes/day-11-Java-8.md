@@ -148,15 +148,15 @@ There are several ways to create and obtain a `Stream` in Java:
 #### A. From a Collection
 The most common way is using the `stream()` or `parallelStream()` method on any `java.util.Collection`:
 ```java
-List<String> list = Arrays.asList("Java", "Spring", "Docker");
+List<String> list = ArraysQuestion.asList("Java", "Spring", "Docker");
 Stream<String> streamFromList = list.stream();
 ```
 
 #### B. From an Array
-Using the static helper method `Arrays.stream()`:
+Using the static helper method `ArraysQuestion.stream()`:
 ```java
 String[] array = {"Java", "Spring", "Docker"};
-Stream<String> streamFromArray = Arrays.stream(array);
+Stream<String> streamFromArray = ArraysQuestion.stream(array);
 ```
 
 #### C. Using `Stream.of()`
@@ -197,10 +197,10 @@ Stream<String> emptyStream = Stream.empty();
   
 FlatMap in streams
 
-List<List<Integer>> nested = Arrays.asList(
-                Arrays.asList(1, 2, 3),
-                Arrays.asList(4, 5),
-                Arrays.asList(6, 7, 8)
+List<List<Integer>> nested = ArraysQuestion.asList(
+                ArraysQuestion.asList(1, 2, 3),
+                ArraysQuestion.asList(4, 5),
+                ArraysQuestion.asList(6, 7, 8)
         );
         List<Integer> flatList = nested.stream()
                 .flatMap(Collection::stream)
