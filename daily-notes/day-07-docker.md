@@ -28,6 +28,8 @@ docker ps - It is used to list all the running containers
 docker ps -a - It is used to list all the containers   
 docker run -d -p <host_port>:<container_port> <image_name> - It is used to run a container from an image with a specific port mapping 
 docker exec -it <container_name> /bin/bash- It is used to run a bash command in a container
+docker compose -f docker-compose.yml up -d- It is used to run a container from a docker-compose.yml file in detached mode
+docker compose -f docker-compose.yml down- It is used to stop and remove all the containers from a docker-compose.yml file in detached mode
 
 docker build -t <image_name> <path_to_dockerfile> - It is used to build an image from a Dockerfile        
 docker logs <container_name> or <container_id> - It is used to view the logs of a container    
