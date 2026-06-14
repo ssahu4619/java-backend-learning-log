@@ -80,3 +80,34 @@ Give me a screen of fourth and the fifth point you switch, you said, which is th
 Sure. So when you mark a method as final, the compiler knows it won't be overridden, so it can inline the method call directly into the calling code instead of doing a virtual method lookup—that's faster. For final variables, the compiler can optimize by treating them as constants and replacing references with their actual values.
 
 As for the second point, if you have a final reference to a list, you can't reassign the reference to a different list, but you can still modify the contents of that list—add or remove elements. The reference itself is immutable, but the object it points to isn't necessarily immutable. Does that clarify it?
+
+public class Logger {
+
+    private static volatile Logger instance;
+    private StringBuilder logHistory = new StringBuilder();
+
+    // Private constructor — no one can do new Logger()
+    private Logger() {
+        System.out.println("Logger created — only once!");
+    }
+
+    public static Logger getInstance() {
+        if (instance == null) {
+            synchronized (Logger.class) {
+                if (instance == null) {
+                    instance = new Logger();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public void log(String message) {
+        System.out.println("[LOG]: " + message);
+        logHistory.append(message).append("\n");
+    }
+
+    public void showHistory() {
+        System.out.println(logHistory.toString());
+    }
+}
