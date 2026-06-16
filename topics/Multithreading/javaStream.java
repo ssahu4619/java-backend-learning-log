@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 
 public class javaStream {
 
-        class Employee {
+       public static class Employee {
                 private String name;
                 private int salary;
                 String department;
@@ -233,7 +233,7 @@ public class javaStream {
                 Map<Boolean, List<Integer>> collect2 = Pnumbers.stream()
                                 .collect(Collectors.partitioningBy(s -> s % 2 == 0));
                 collect2.entrySet().iterator();
-                collect2.forEach((isEven, list) -> {
+                collect2.forEach((isEven, P) -> {
                         System.out.println((isEven ? "Even Numbers: " : "Odd Numbers: ") + list);
                 });
 
@@ -290,12 +290,12 @@ public class javaStream {
                 longest.ifPresent(System.out::println);
 
                 // 7. Reverse each word in a list of strings.
-                List<String> list = words.stream()
+                List<String> list3 = words.stream()
                                 .map(s -> new StringBuilder(s)
                                                 .reverse().toString())
                                 .toList();
                 System.out.println("\nList to be reverse - " + words.toString());
-                System.out.println(list);
+                System.out.println(list3);
 
                 // 9.Find department with the highest average salary.
                 Map<String, Double> avgSalaryByDept = empList.stream()
@@ -394,5 +394,33 @@ public class javaStream {
                 mNumbers.stream().mapToInt(Integer::intValue).min().getAsInt();
                 int su = eNumber.stream().mapToInt(Integer::intValue).sum();
                 System.out.println("ssu" + su);
+
+                int N = 50;
+
+List<Integer> primes = IntStream.rangeClosed(2, N)
+        .filter(n -> IntStream.rangeClosed(2, (int) Math.sqrt(n))
+                              .noneMatch(i -> n % i == 0))
+        .boxed()                          // converts int → Integer
+        .collect(Collectors.toList());
+
+System.out.println(primes);
+
+
+List<List<String>> listOfLists = Arrays.asList(
+            Arrays.asList("Geeks", "For"),
+            Arrays.asList("GeeksForGeeks", "A computer portal"),
+            Arrays.asList("Java", "Programming")
+        );
+            System.out.println("flatMap---");
+        listOfLists.stream()
+                .flatMap(Collection::stream)
+                .forEach(System.out::println);
+
+            List<String> arList = Arrays.asList("Geeks","For","GeeksForGeeks",
+                    "A computer portal","Java", "Programming","java");
+            Map<String, Long> countting = arList.stream()
+                    .flatMap(s -> Arrays.stream(s.split(" ")))
+                    .collect(Collectors.groupingBy(t -> t, Collectors.counting()));
+            System.out.println("count of"+ countting);
         }
 }
