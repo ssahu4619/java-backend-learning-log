@@ -1,4 +1,4 @@
-### Tell Me About Yourself
+ ### Tell Me About Yourself
 
 ### Answer
 I have 4 years of experience in Java backend development. My primary expertise is Java 8/17, Spring Boot, Microservices, REST APIs, JPA, SQL, Kafka and AWS basics. Currently, I am working in TCS in-house Employee Management System serving 300+ users, handling the full employee lifecycle — onboarding, recruitment pipeline, and asset management where I am responsible for designing APIs, implementing business logic, database optimization, and production support. I have also worked on bug fixing, and collaborating with cross-functional teams. Now I am looking for opportunities where I can take greater ownership and contribute to large-scale distributed systems and AI based projects.
