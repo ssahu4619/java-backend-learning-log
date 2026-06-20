@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -292,5 +293,118 @@ public class flatMapQue {
                  .stream()
                  .collect(Collectors.groupingBy(Employee::getGender,Collectors.averagingInt(Employee::getAge)))
                  .forEach((s,d) -> System.out.println("gender- "+s+" average- "+d));
+
+
+//         ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//        1. Get a comma separated string of all employee names sorted alphabetically.
+         System.out.println("\nGet a comma separated string of all employee names sorted alphabetically.\n");
+         employees.stream()
+                 .map(Employee::getName).forEach(System.out::print);
+
+//         Q2. Get all unique department names from the employee list as a single string separated by |
+         System.out.println("\nQ2. Get all unique department names from the employee list as a single string separated by |\n");
+         String singleString = employees
+                 .stream()
+                 .map(Employee::getDepartment)
+                 .map(Department::getDeptName)
+                 .distinct()
+                 .collect(Collectors.joining(" | "));
+         System.out.println(singleString);
+
+//         Q3. From this sentence find all words whose length is greater than 4, remove duplicates and print in uppercase.
+         String sentence = "the quick brown fox jumps over the lazy dog near the river";
+         List<String> list1 = Arrays.stream(sentence.split(" "))
+                 .distinct()
+                 .filter(s -> s.length() >= 4)
+                 .map(String::toUpperCase)
+                 .toList();
+         System.out.println("\n list1"+list1);
+
+//         Q4. From employee names — find names that contain letter "a" (case insensitive) and return them as a single uppercase string joined by -
+         String result = employees.stream()
+                 .map(Employee::getName)
+                 .filter(s -> s.contains("a"))
+                 .map(s -> s.toUpperCase())
+                 .collect(Collectors.joining(" - "));
+         System.out.println(" \ncontain a "+ result);
+
+//         Q5. Count how many employees have names longer than 4 characters per department.
+         Map<String, Long> employeeName = employees.stream()
+                 .filter(e -> e.getName().length() > 4)   // ✅ filter first
+                 .collect(Collectors.groupingBy(
+                         e -> e.getDepartment().getDeptName(), // group by dept
+                         Collectors.counting()));
+
+//         Q6. From this list of strings — each string has employee info — parse and find the highest paid employee.
+         // ✅ correct — no spaces after comma
+         List<String> data1 = Arrays.asList(
+                 "Alice,Female,28,75000,IT",
+                 "Bob,Male,35,55000,HR",
+                 "Charlie,Male,42,90000,Finance",
+                 "Diana,Female,30,95000,IT",
+                 "Henry,Male,45,105000,Finance"
+         );
+         // print each split result to see what's happening
+         data1.forEach(s -> {
+             String[] arr = s.split(",");
+             System.out.println("Length=" + arr.length
+                     + " → " + Arrays.toString(arr));
+         });
+         Employee employee1 = data1.stream()
+                 .map(s -> s.split(","))     // split by comma
+                 .map(arr -> new Employee(   // create Employee from array
+                         arr[0],             // name
+                         arr[1],             // gender
+                         Integer.parseInt(arr[2]),   // age
+                         Double.parseDouble(arr[3]), // salary
+                         new Department(arr[4], "") // department
+                 )).max(Comparator.comparingDouble(Employee::getSalary)).get();
+         System.out.println(employee1);
+
+//         Q8. From this paragraph — find the top 3 most frequently occurring words (ignore case, ignore words less than 3 characters).
+         String paragraph = "java stream is great and java is powerful "
+                 + "stream api is the best api for java developers";
+         System.out.println("\n here "+paragraph);
+
+       Arrays.stream(paragraph.split(" "))
+                 .filter(s -> s.length() >= 3)
+                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                 .forEach( (r,d)->System.out.println("string- "+r+" Number of occurence------ "+d));
+
+         Arrays.stream(paragraph.split(" "))
+                 .map(String::toLowerCase)           // ✅ ignore case
+                 .filter(s -> s.length() >= 3)       // ✅ ignore words less than 3
+                 .collect(Collectors.groupingBy(
+                         Function.identity(),
+                         Collectors.counting()))
+                 .entrySet()
+                 .stream()
+                 .sorted(Map.Entry.<String, Long>    // ✅ sort by frequency
+                         comparingByValue()
+                         .reversed())
+                 .limit(3)                           // ✅ top 3 only
+                 .forEach((entry) ->
+                         System.out.printf("%-10s → %d%n",
+                                 entry.getKey(),
+                                 entry.getValue()));
+
+
+//         Q9. From employee list — find department where all employees have salary greater than 60000.
+         employees.stream()
+                 .filter(e->e.getSalary()>60000)
+                 .collect(Collectors.groupingBy(Employee::getDepartment))
+                 .forEach((d,l)-> System.out.println("depa "+d.getDeptName()+" -"+l.toString()));
+
+         employees.stream()
+                 .collect(Collectors.groupingBy(
+                         e -> e.getDepartment().getDeptName()))  // group by dept first
+                 .entrySet()
+                 .stream()
+                 .filter(entry -> entry.getValue()
+                         .stream()                              //    in that dept
+                         .allMatch(e -> e.getSalary() > 60000)) //    have salary > 60000
+                 .map(Map.Entry::getKey)
+                 .forEach(dept -> System.out.println("Dept: " + dept));
+
      }
 }
